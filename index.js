@@ -31,57 +31,52 @@ async function run() {
             const query = {_id: ObjectId(id)};
             const product = await productCollection.findOne(query);
             res.send(product);
-        })
+        });
 
-        //POST User  : add a new user
-        // app.post('/user', async (req, res) => {
-        //     const newUser = req.body;
-        //     console.log('adding new user', newUser);
-        //     const result = await userCollection.insertOne(newUser);
-        //     res.send(result)
-        // })
+        //POST
+        app.post('/products', async (req, res) => {
+            const newService = req.body;
+            const result = await productCollection.insertOne(newService);
+            res.send(result)
+        });
 
-        // app.get('/product/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = {_id: ObjectId(id)};
-        //     const service = await productCollection.findOne(query);
-        //     res.send(service);
-        // });
+        // DELETE 
+            app.delete('/products/:id', async (req, res) => {
+                const id = req.params.id;
+                // console.log(id);
+                const query = { _id: ObjectId(id) };
+                const result = await productCollection.deleteOne(query);
+                res.send(result);
+        });
 
         // use post to get products by ids 
-        // app.post('/productsByKeys', async (req, res) =>{
-        //     const keys = req.body;
-        //     // console.log(keys);
-        //     const ids = keys.map(id => ObjectId(id));
-        //     const query = {_id: {$in: ids}}
-        //     const cursor = productCollection.find(query);
-        //     const products = await cursor.toArray();
-        //     res.send(products);
-        // });
+        app.post('/productsByKeys', async (req, res) =>{
+            const keys = req.body;
+            // console.log(keys);
+            const ids = keys.map(id => ObjectId(id));
+            const query = {_id: {$in: ids}}
+            const cursor = productCollection.find(query);
+            const products = await cursor.toArray();
+            res.send(products);
+        });
 
 
-        // app.put('/manageproduct/:id', async (req, res) =>{
-        //     const id = req.params.id;
-        //     const updatedProduct = req.body;
-        //     const filter = {_id: ObjectId(id)};
-        //     const options = { upsert: true};
-        //     const updatedDoc = {
-        //         $set: {
-        //             name: updatedProduct.name,
-        //             email: updatedProduct.email
-        //         }
-        //     };
-        //     const result = await productCollection.updateOne(filter, updatedDoc, options);
-        //     res.send(result);
-        // })
+        app.put('/manageproduct/:id', async (req, res) =>{
+            const id = req.params.id;
+            const updatedProduct = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true};
+            const updatedDoc = {
+                $set: {
+                    name: updatedProduct.name,
+                    email: updatedProduct.email
+                }
+            };
+            const result = await productCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
 
-        //  // DELETE 
-        //  app.delete('/service/:id', async (req, res) =>{
-        //     const id = req.params.id;
-        //     const query = {_id: ObjectId(id)};
-        //     const result = await serviceCollection.deleteOne(query);
-        //     res.send(result);
-        // });
+        
     }
     finally {
 
